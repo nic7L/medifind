@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en" data-base="..">
+<head>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="MediFind is a CSE326 health facility resource directory for comparing clinics, labs, pharmacies and support facilities.">
+  <meta name="theme-color" content="#050914">
+
+  <title>Admin demo · MediFind</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+  <header class="site-header" data-site-header></header>
+  <main class="main" id="main">
+    <section class="page-hero"><div class="container"><span class="kicker">Client-side management</span><h1 class="gradient-text">Admin demo</h1><div class="admin-warning"><strong>Demo security only:</strong> this static project has no real authentication or server. Credentials and management logic run in the browser, and edits are stored in localStorage. Do not use this approach for real medical or production data.</div></div></section>
+
+    <section class="section-tight" data-admin-login><div class="container"><div class="login-card glass"><h2>Admin login</h2><p class="muted">Use the demo credentials to open the client-side management dashboard.</p><div class="credentials"><strong>Username:</strong> admin<br><strong>Password:</strong> medifind326</div><form><label>Username<input name="username" autocomplete="username" required></label><label>Password<input name="password" type="password" autocomplete="current-password" required></label><button class="btn btn-primary ripple" type="submit">Open dashboard</button></form></div></div></section>
+
+    <section class="section-tight" data-admin-dashboard hidden><div class="container">
+      <div class="admin-toolbar"><div><h2>Facility management</h2><p class="muted">Add, edit, delete, verify and moderate browser-local demo content.</p></div><div><button class="btn btn-primary" data-add-facility>＋ Add facility</button> <button class="btn btn-ghost" data-admin-logout>Log out</button></div></div>
+      <div class="admin-stats"><div class="stat-card glass"><strong data-admin-stat="facilities">0</strong><span>Facilities</span></div><div class="stat-card glass"><strong data-admin-stat="verified">0</strong><span>Verified</span></div><div class="stat-card glass"><strong data-admin-stat="feedback">0</strong><span>Local feedback</span></div></div>
+      <div class="section-tight"><div class="table-wrap glass"><table class="admin-table"><thead><tr><th>Facility</th><th>Category</th><th>City</th><th>Rating</th><th>Verification</th><th>Actions</th></tr></thead><tbody data-admin-table></tbody></table></div></div>
+      <div class="about-grid"><section class="panel glass"><h2>Feedback moderation</h2><div data-feedback-admin></div></section><section class="panel glass"><h2>Reset demo</h2><p class="muted">Restore the original 30 JSON facilities and remove local edits, favorites, comparisons and feedback stored in this browser.</p><button class="btn btn-ghost" data-reset-demo>Reset all demo data</button></section></div>
+    </div></section>
+
+    <dialog class="editor-dialog" id="facility-editor"><form method="dialog"><div class="dialog-head"><h2 data-editor-title>Add facility</h2><button type="button" class="icon-btn" data-close-editor aria-label="Close">×</button></div><div class="form-grid">
+      <label>Name<input name="name" required></label><label>Category<select name="category"><option>Clinic</option><option>Lab</option><option>Pharmacy</option><option>Support Facility</option></select></label>
+      <label>Area<input name="area" required></label><label>City<input name="city" required></label>
+      <label class="full">Address<input name="address" required></label><label>Phone<input name="phone" required></label><label>Email<input name="email" type="email" required></label>
+      <label>Website<input name="website" type="url" placeholder="https://example.com"></label><label>Base rating<input name="rating" type="number" min="0" max="5" step="0.1" value="4.2"></label>
+      <label class="full">Services, comma-separated<input name="services" required></label><label class="full">Description<textarea name="description" rows="3" required></textarea></label>
+      <label>Mon–Fri hours<input name="weekday" value="09:00-18:00" required></label><label>Saturday<input name="saturday" value="09:00-14:00" required></label><label>Sunday<input name="sunday" value="Closed" required></label><label class="toggle-chip"><input name="verified" type="checkbox"> Verified</label>
+    </div><div class="dialog-actions"><button class="btn btn-primary" type="submit">Save facility</button></div></form></dialog>
+  </main>
+  <footer class="site-footer" data-site-footer></footer>
+  <script type="module" src="../js/app.js"></script>
+  <script type="module" src="../js/admin.js"></script>
+</body>
+</html>

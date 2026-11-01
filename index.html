@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en" data-base=".">
+<head>
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="MediFind is a CSE326 health facility resource directory for comparing clinics, labs, pharmacies and support facilities.">
+  <meta name="theme-color" content="#050914">
+
+  <title>MediFind · Health Facility Resource Directory</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="site-header" data-site-header></header>
+  <main class="main" id="main">
+    <section class="hero">
+      <div class="hero-cursor-glow" aria-hidden="true"></div>
+      <div class="container hero-grid">
+        <div class="hero-copy reveal">
+          <span class="kicker">CSE326 · Health Facility Resource Directory</span>
+          <h1>Find <span class="gradient-text typing-line" data-typing>care you can compare</span></h1>
+          <p>Explore structured public information for clinics, diagnostic labs, pharmacies and health support facilities without jumping between inconsistent listings.</p>
+          <form class="hero-search glass" data-hero-search role="search">
+            <input type="search" aria-label="Search MediFind" placeholder="Search facility, service, area or city">
+            <button class="btn btn-primary ripple" type="submit">Search directory</button>
+          </form>
+          <div class="hero-actions"><a class="btn btn-ghost ripple" href="pages/directory.html">Explore all facilities</a><a class="btn btn-ghost ripple" href="pages/compare.html">Compare options</a></div>
+        </div>
+        <div class="hero-visual reveal" aria-hidden="true">
+          <div class="orbit-card glass"></div>
+          <div class="mini-dashboard glass">
+            <div class="mini-search">⌕ Search health resources</div>
+            <div class="mini-row"><span class="mini-icon">+</span><span><strong>Clinic</strong><small>Verified · Open now</small></span><span>4.8★</span></div>
+            <div class="mini-row"><span class="mini-icon">◉</span><span><strong>Diagnostic Lab</strong><small>Reports · Home collection</small></span><span>4.6★</span></div>
+            <div class="mini-row"><span class="mini-icon">Rx</span><span><strong>24-hour Pharmacy</strong><small>Open all day</small></span><span>4.7★</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section-tight">
+      <div class="container stats-grid reveal">
+        <div class="stat-card glass"><strong data-counter="facilities">0</strong><span>sample facilities</span></div>
+        <div class="stat-card glass"><strong data-counter="verified">0</strong><span>verified listings</span></div>
+        <div class="stat-card glass"><strong data-counter="cities">0</strong><span>cities represented</span></div>
+        <div class="stat-card glass"><strong data-counter="categories">0</strong><span>service categories</span></div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container">
+        <div class="section-heading reveal"><div><span class="kicker">Featured resources</span><h2>High-rated facilities</h2></div><a class="btn btn-ghost" href="pages/directory.html">View full directory →</a></div>
+        <div class="cards-grid" data-featured><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div></div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="container about-grid">
+        <article class="panel glass reveal"><span class="kicker">Why MediFind</span><h2>Structured information, one consistent format.</h2><p class="muted">Every profile uses the same fields for services, location, opening hours, contact details, verification and community feedback. That makes options easier to scan and compare.</p></article>
+        <article class="panel glass reveal"><span class="kicker">Privacy-friendly demo</span><h2>No backend, no accounts, no tracking.</h2><p class="muted">Favorites, comparisons, feedback and admin edits stay in your browser with localStorage. The project is designed to work as static files on GitHub Pages.</p></article>
+      </div>
+    </section>
+  </main>
+  <footer class="site-footer" data-site-footer></footer>
+  <script type="module" src="js/app.js"></script>
+  <script type="module" src="js/home.js"></script>
+</body>
+</html>

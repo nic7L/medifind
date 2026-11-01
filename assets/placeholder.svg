@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 700" role="img" aria-labelledby="title desc">
+  <title id="title">MediFind facility placeholder</title>
+  <desc id="desc">Abstract neon medical cross and location pin on a dark gradient background.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#08111f"/>
+      <stop offset="0.55" stop-color="#12152f"/>
+      <stop offset="1" stop-color="#210d32"/>
+    </linearGradient>
+    <linearGradient id="neon" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#2cf7ff"/>
+      <stop offset="0.5" stop-color="#8f5cff"/>
+      <stop offset="1" stop-color="#ff4fd8"/>
+    </linearGradient>
+    <filter id="glow"><feGaussianBlur stdDeviation="14" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+  </defs>
+  <rect width="1200" height="700" fill="url(#bg)"/>
+  <circle cx="190" cy="135" r="180" fill="#2cf7ff" opacity=".08"/>
+  <circle cx="1020" cy="590" r="220" fill="#ff4fd8" opacity=".08"/>
+  <g filter="url(#glow)" fill="none" stroke="url(#neon)" stroke-width="18" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M600 145c-126 0-228 99-228 221 0 155 228 284 228 284s228-129 228-284c0-122-102-221-228-221Z" opacity=".9"/>
+    <path d="M600 266v198M501 365h198"/>
+  </g>
+  <text x="600" y="90" text-anchor="middle" fill="#dffcff" font-family="Arial, sans-serif" font-size="34" letter-spacing="8">MEDIFIND</text>
+</svg>
