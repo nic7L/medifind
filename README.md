@@ -21,7 +21,7 @@ The 30 included listings are fictional academic samples in Punjab, India. The na
 - Saved favorites and comparison of up to three facilities.
 - Demo admin login, add/edit/delete records, verification toggles, feedback deletion and reset.
 - Midnight Emerald (#0B1210) default theme with malachite green (#31EC56) and razzmatazz (#EF036C) accents, responsive grids, optional soft light theme, desktop cursor follower, scroll reveal, counters, page transitions, skeleton loaders, toasts and reduced-motion-aware accent animations.
-- Ctrl/Cmd+K command palette and CatDoc, a draggable rule-based directory assistant using the supplied doctor-cat image. CatDoc includes cross-page guided tours, saved position, keyboard movement, quick search, walk and idle animations, and optional browser speech synthesis.
+- Ctrl/Cmd+K command palette and CatDoc, a draggable rule-based directory assistant using the supplied doctor-cat image. CatDoc includes cross-page guided tours, saved position, keyboard movement, quick search, animated blinking, speaking mouth movements, walking, playful hearts, sleeping eyes, and optional browser speech synthesis.
 - Visible keyboard focus, skip link, accessible form labels, reduced-motion support and font fallbacks.
 
 ## Folder structure

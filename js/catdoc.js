@@ -62,31 +62,63 @@ export function answerQuestion(query, all = getFacilities()) {
   return 'I found ' + items.length + ' sample listing' + (items.length === 1 ? '' : 's') + ':<br>' + items.slice(0,5).map(f => '<a href="' + pageUrl('facility.html?id=' + encodeURIComponent(f.id)) + '">' + escapeHtml(f.name) + '</a> · ' + escapeHtml(f.city) + ' · ' + (isOpenNow(f) ? 'Open now' : 'Closed')).join('<br>') + (items.length > 5 ? '<br>Explore the directory for more.' : '');
 }
 
+// The uploaded picture remains the base layer. Small SVG facial layers animate
+// its existing eyes and mouth without replacing the original character.
+function animatedArt(src, label='') {
+  const accessibility=label?'role="img" aria-label="'+escapeHtml(label)+'"':'aria-hidden="true"';
+  return '<svg class="catdoc-art" viewBox="0 0 240 240" '+accessibility+' focusable="false" xmlns="http://www.w3.org/2000/svg">'
+    + '<image href="'+escapeHtml(src)+'" width="240" height="240" />'
+    + '<g class="catdoc-lids"><rect x="66" y="103" width="23" height="24" rx="9" fill="#fefefe"/><rect x="145" y="106" width="23" height="24" rx="9" fill="#fefefe"/><path d="M69 115 Q77 123 85 115 M148 118 Q156 126 164 118" fill="none" stroke="#080808" stroke-width="4.5" stroke-linecap="round"/></g>'
+    + '<g class="catdoc-mouth"><rect x="92" y="108" width="46" height="27" rx="10" fill="#fefefe"/><ellipse class="catdoc-mouth-shape" cx="115" cy="120" rx="10" ry="8" fill="#080808"/><ellipse class="catdoc-tongue" cx="115" cy="124" rx="4" ry="2" fill="#EF036C"/></g>'
+    + '<g class="catdoc-joy" fill="#EF036C"><path d="M23 49 C12 36 1 50 23 64 C45 50 34 36 23 49Z"/><path d="M216 65 C206 54 197 65 216 78 C235 65 225 54 216 65Z"/></g>'
+    + '<g class="catdoc-zzz" fill="#087527" font-family="Inter,Arial,sans-serif" font-weight="800"><text x="190" y="25" font-size="17">Z</text><text x="207" y="17" font-size="12">z</text></g>'
+    + '</svg>';
+}
+
 export function initCatDoc() {
   if (document.querySelector('.catdoc-widget')) return;
   const image = basePath + '/assets/catdoc.webp';
+  const heroPicture=document.querySelector('.catdoc-stage img');
+  if(heroPicture){heroPicture.insertAdjacentHTML('beforebegin',animatedArt(image,heroPicture.alt));heroPicture.remove();}
   const widget = document.createElement('div');
   widget.className = 'catdoc-widget';
-  widget.innerHTML = '<div class="catdoc-bubble" aria-hidden="true">Need a helping paw?</div><button class="catdoc-character" type="button" aria-label="Open CatDoc assistant. Drag to move; use arrow keys to reposition." aria-expanded="false" aria-controls="catdoc-panel"><img src="' + image + '" alt="" width="104" height="104" draggable="false"><span>CatDoc <i aria-hidden="true">●</i></span></button>';
+  widget.innerHTML = '<div class="catdoc-bubble" aria-hidden="true">Need a helping paw?</div><button class="catdoc-character" type="button" aria-label="Open CatDoc assistant. Drag to move; use arrow keys to reposition." aria-expanded="false" aria-controls="catdoc-panel">'+ animatedArt(image) +'<span>CatDoc <i aria-hidden="true">●</i></span></button>';
   const panel = document.createElement('section');
   panel.id = 'catdoc-panel'; panel.className = 'catdoc-panel'; panel.hidden = true;
   panel.setAttribute('aria-label','CatDoc directory assistant');
-  panel.innerHTML = '<header class="catdoc-head"><img src="' + image + '" alt="" width="46" height="46"><div><strong>CatDoc</strong><small>Your MediFind companion</small></div><button class="icon-btn" type="button" data-cat-close aria-label="Minimize CatDoc">×</button></header>'
-    + '<div class="catdoc-tools"><button type="button" data-tour>Guided tour</button><button type="button" data-walk>Walk</button><button type="button" data-reset-pos>Reset position</button><button type="button" data-speak hidden>Read aloud</button></div>'
+  panel.innerHTML = '<header class="catdoc-head">'+ animatedArt(image) +'<div><strong>CatDoc</strong><small>Your MediFind companion</small></div><button class="icon-btn" type="button" data-cat-close aria-label="Minimize CatDoc">×</button></header>'
+    + '<div class="catdoc-tools"><button type="button" data-tour>Guided tour</button><button type="button" data-walk>Walk</button><button type="button" data-play>Play</button><button type="button" data-nap>Nap</button><button type="button" data-reset-pos>Reset position</button><button type="button" data-speak hidden>Read aloud</button></div>'
     + '<div class="catdoc-tour" hidden><small data-step></small><strong data-tour-title></strong><p data-tour-text></p><div><button type="button" class="btn" data-tour-stop>End tour</button><button type="button" class="btn btn-primary" data-tour-next>Next →</button></div></div>'
     + '<div class="catdoc-log" role="log" aria-live="polite" aria-label="CatDoc replies"></div>'
     + '<div class="catdoc-queries"><button type="button" data-query="Find a 24-hour pharmacy">24-hour pharmacy</button><button type="button" data-query="Show verified clinics">Verified clinics</button><button type="button" data-query="How do I compare facilities?">How to compare</button></div>'
     + '<form class="catdoc-form"><input aria-label="Ask CatDoc" placeholder="Ask about facilities…" maxlength="250" required><button class="btn btn-primary" type="submit" aria-label="Send">↗</button></form><p class="catdoc-disclaimer">Demo directory only · Not medical advice</p>';
   document.body.append(widget,panel);
   const cat = widget.querySelector('.catdoc-character'), log = panel.querySelector('.catdoc-log'), input = panel.querySelector('input'), tour = panel.querySelector('.catdoc-tour'), bubble=widget.querySelector('.catdoc-bubble');
-  let lastReply = '', step = -1, highlighted = null, position, drag = null, suppressClick = false, idleTimer;
+  let lastReply = '', step = -1, highlighted = null, position, drag = null, suppressClick = false, idleTimer, talkTimer, cheerTimer, walkTimer;
+  const root=document.documentElement;
+  function sleeping(value) {
+    widget.classList.toggle('sleepy',value);
+    root.classList.toggle('catdoc-napping',value);
+    bubble.textContent=value?'Zzz… tap to wake me':'Need a helping paw?';
+  }
   function activity() {
-    widget.classList.remove('sleepy'); bubble.textContent = 'Need a helping paw?';
-    clearTimeout(idleTimer); idleTimer = setTimeout(() => { widget.classList.add('sleepy'); bubble.textContent='Zzz… tap to wake me'; }, 45000);
+    sleeping(false);
+    clearTimeout(idleTimer);
+    idleTimer=setTimeout(()=>{if(panel.hidden) sleeping(true);},45000);
+  }
+  function talking(value, duration=0) {
+    clearTimeout(talkTimer); root.classList.toggle('catdoc-talking',value);
+    if(value&&duration) talkTimer=setTimeout(()=>talking(false),duration);
+  }
+  function celebrate() {
+    clearTimeout(cheerTimer); root.classList.remove('catdoc-celebrating');
+    void cat.offsetWidth; root.classList.add('catdoc-celebrating');
+    cheerTimer=setTimeout(()=>root.classList.remove('catdoc-celebrating'),1250);
   }
   function reply(html) {
     const msg = document.createElement('div'); msg.className='catdoc-message bot'; msg.innerHTML=html; log.append(msg);
-    lastReply=msg.textContent; log.scrollTop=log.scrollHeight; cat.classList.remove('cheer'); void cat.offsetWidth; cat.classList.add('cheer');
+    lastReply=msg.textContent; log.scrollTop=log.scrollHeight;
+    talking(true,Math.min(1800,Math.max(550,lastReply.length*12)));
   }
   reply('Hi, human! I’m CatDoc. I can find sample clinics, labs and pharmacies, or show you how MediFind works.');
   function ask(q) {
@@ -112,6 +144,7 @@ export function initCatDoc() {
   addEventListener('resize',()=>{ if(position) place(position.x,position.y); });
   cat.addEventListener('pointerdown',e=>{
     if(!e.isPrimary || e.button!==0) return; activity(); suppressClick=false;
+    clearTimeout(walkTimer);widget.classList.remove('walking');
     drag={id:e.pointerId,x:e.clientX,y:e.clientY,left:position.x,top:position.y,moved:false}; cat.setPointerCapture(e.pointerId);
   });
   cat.addEventListener('pointermove',e=>{
@@ -139,12 +172,26 @@ export function initCatDoc() {
   panel.querySelectorAll('[data-query]').forEach(b=>b.addEventListener('click',()=>ask(b.dataset.query)));
   panel.querySelector('[data-reset-pos]').addEventListener('click',()=>{activity();defaultPlace();});
   panel.querySelector('[data-walk]').addEventListener('click',()=>{
-    activity();widget.classList.add('walking');place(position.x>innerWidth/2?12:innerWidth-widget.offsetWidth-18,innerHeight-widget.offsetHeight-18);
-    setTimeout(()=>widget.classList.remove('walking'),reduced()?0:850);
+    setOpen(false,false);cat.focus({preventScroll:true});
+    clearTimeout(walkTimer);widget.classList.add('walking');
+    place(position.x>innerWidth/2?12:innerWidth-widget.offsetWidth-18,innerHeight-widget.offsetHeight-18);
+    walkTimer=setTimeout(()=>{widget.classList.remove('walking');celebrate();},reduced()?0:1380);
+  });
+  panel.querySelector('[data-play]').addEventListener('click',()=>{
+    setOpen(false,false);cat.focus({preventScroll:true});celebrate();
+  });
+  panel.querySelector('[data-nap]').addEventListener('click',()=>{
+    setOpen(false,false);cat.focus({preventScroll:true});clearTimeout(idleTimer);talking(false);sleeping(true);
   });
   const speak=panel.querySelector('[data-speak]');
   if('speechSynthesis' in window && 'SpeechSynthesisUtterance' in window){
-    speak.hidden=false;speak.addEventListener('click',()=>{speechSynthesis.cancel(); const utterance=new SpeechSynthesisUtterance(step>=0?steps[step].text:lastReply);utterance.lang='en-IN';speechSynthesis.speak(utterance);});
+    speak.hidden=false;speak.addEventListener('click',()=>{
+      activity();speechSynthesis.cancel();
+      const utterance=new SpeechSynthesisUtterance(step>=0?steps[step].text:lastReply);utterance.lang='en-IN';
+      utterance.onstart=()=>talking(true,Math.min(60000,Math.max(3000,utterance.text.length*150)));
+      utterance.onend=utterance.onerror=()=>talking(false);
+      speechSynthesis.speak(utterance);
+    });
   }
   function clearHighlight(){highlighted?.classList.remove('catdoc-highlight');highlighted=null;}
   function stopTour(){clearHighlight();step=-1;tour.hidden=true;clear('sessionStorage',TOUR);}
@@ -152,7 +199,7 @@ export function initCatDoc() {
     if(!Number.isInteger(index)||index<0||index>=steps.length){stopTour();return;}
     const item=steps[index];write('sessionStorage',TOUR,index);
     if(item.page!==currentPage()){location.href=route(item.page);return;}
-    step=index;setOpen(true,false);tour.hidden=false;
+    step=index;setOpen(true,false);tour.hidden=false;talking(true,1100);
     tour.querySelector('[data-step]').textContent='STEP '+(index+1)+' OF '+steps.length;
     tour.querySelector('[data-tour-title]').textContent=item.title;tour.querySelector('[data-tour-text]').textContent=item.text;
     tour.querySelector('[data-tour-next]').textContent=index===steps.length-1?'Finish ✓':'Next →';
@@ -162,7 +209,7 @@ export function initCatDoc() {
   }
   panel.querySelector('[data-tour]').addEventListener('click',()=>showStep(0));
   panel.querySelector('[data-tour-stop]').addEventListener('click',stopTour);
-  panel.querySelector('[data-tour-next]').addEventListener('click',()=>{if(step===steps.length-1){stopTour();reply('Tour complete! Great work. I’m here whenever you need a helping paw.');}else showStep(step+1);});
+  panel.querySelector('[data-tour-next]').addEventListener('click',()=>{if(step===steps.length-1){stopTour();reply('Tour complete! Great work. I’m here whenever you need a helping paw.');celebrate();}else showStep(step+1);});
   const resume=read('sessionStorage',TOUR,null);if(Number.isInteger(resume)&&resume>=0&&resume<steps.length){if(steps[resume].page===currentPage())showStep(resume);else stopTour();}
   activity();
 }

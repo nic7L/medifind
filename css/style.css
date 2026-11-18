@@ -1506,3 +1506,46 @@ input[type=checkbox],input[type=radio],input[type=range] { accent-color: var(--r
   .catdoc-orbit,.catdoc-hero .catdoc-stage img,.catdoc-character img,.catdoc-panel { animation:none !important; }
   .catdoc-widget.walking { transition:none !important; }
 }
+
+/* CatDoc animation rig. The original WebP stays unchanged; only the face,
+   expressive overlays and body motion are animated. */
+.catdoc-art { display:block; aspect-ratio:1; overflow:hidden; background:#fefefe; border-radius:35%; border:3px solid var(--malachite); transform-origin:50% 85%; }
+.catdoc-hero .catdoc-stage .catdoc-art {
+  width:clamp(150px,45%,220px); height:auto; margin:12px;
+  box-shadow:0 10px 38px var(--catdoc-green-glow);
+  animation:catdoc-breathe 3.6s ease-in-out infinite;
+}
+.catdoc-character .catdoc-art {
+  width:94px; height:94px; box-shadow:0 0 23px var(--catdoc-green-glow);
+  animation:catdoc-breathe 3.4s ease-in-out infinite;
+}
+.catdoc-character:hover .catdoc-art { border-color:var(--razzmatazz); }
+.catdoc-head .catdoc-art { width:46px; height:46px; flex:none; border-width:1px; border-radius:14px; }
+.catdoc-lids { opacity:0; animation:catdoc-blink 5.3s steps(1,end) infinite; }
+.catdoc-head .catdoc-lids { animation-delay:.5s; }
+.catdoc-character .catdoc-lids { animation-delay:1s; }
+@keyframes catdoc-blink { 0%,43%,48%,86%,90%,100% {opacity:0;} 44%,87% {opacity:1;} }
+.catdoc-mouth,.catdoc-joy,.catdoc-zzz { opacity:0; }
+:root.catdoc-talking .catdoc-mouth { opacity:1; }
+:root.catdoc-talking .catdoc-mouth-shape,:root.catdoc-talking .catdoc-tongue { transform-box:fill-box;transform-origin:center;animation:catdoc-lips .22s ease-in-out infinite alternate; }
+@keyframes catdoc-lips { from {transform:scaleY(.22) scaleX(.8);} to {transform:scaleY(1) scaleX(1.05);} }
+:root.catdoc-napping .catdoc-lids { opacity:1;animation:none; }
+:root.catdoc-napping .catdoc-mouth {opacity:0;}
+:root.catdoc-napping .catdoc-zzz { opacity:1;animation:catdoc-dream 2.1s ease-in-out infinite; }
+@keyframes catdoc-dream { 0%,100% {opacity:.5;transform:translateY(0);} 50% {opacity:1;transform:translateY(-4px);} }
+.catdoc-widget.sleepy .catdoc-art { animation-duration:6s; }
+.catdoc-widget.dragging .catdoc-art { animation:none; }
+.catdoc-widget.walking { transition:left 1.35s ease-in-out,top 1.35s ease-in-out; }
+.catdoc-widget.walking .catdoc-art { animation:catdoc-walk-cycle .24s linear infinite; }
+@keyframes catdoc-walk-cycle { 0%,100% {transform:translateY(0) rotate(-5deg);} 25%,75% {transform:translateY(-7px) scale(1.025,.98);} 50% {transform:translateY(0) rotate(5deg);} }
+:root.catdoc-celebrating .catdoc-art { animation:catdoc-celebrate .9s ease-in-out; }
+:root.catdoc-celebrating .catdoc-joy { animation:catdoc-hearts 1.1s ease-out both; }
+@keyframes catdoc-celebrate { 0%,100% {transform:translateY(0) rotate(0);} 20% {transform:translateY(-12px) rotate(-9deg);} 40% {transform:translateY(0) rotate(7deg);} 60% {transform:translateY(-9px) rotate(-5deg);} 80% {transform:translateY(-3px) rotate(5deg);} }
+@keyframes catdoc-hearts { 0%,100% {opacity:0;transform:translateY(6px);} 25%,75% {opacity:1;transform:translateY(-2px);} }
+@media(max-width:600px) { .catdoc-character .catdoc-art {width:76px;height:76px;} }
+@media(prefers-reduced-motion:reduce) {
+  .catdoc-art,.catdoc-art * {animation:none !important;transition:none !important;}
+  .catdoc-widget.walking {transition:none !important;}
+  :root.catdoc-talking .catdoc-mouth {opacity:0;}
+  :root.catdoc-celebrating .catdoc-joy {opacity:1;}
+}
