@@ -21,7 +21,7 @@ The 30 included listings are fictional academic samples in Punjab, India. The na
 - Saved favorites and comparison of up to three facilities.
 - Demo admin login, add/edit/delete records, verification toggles, feedback deletion and reset.
 - Midnight Emerald (#0B1210) default theme with malachite green (#31EC56) and razzmatazz (#EF036C) accents, responsive grids, optional soft light theme, desktop cursor follower, scroll reveal, counters, page transitions, skeleton loaders, toasts and reduced-motion-aware accent animations.
-- Ctrl/Cmd+K command palette and CatDoc, a draggable rule-based directory assistant using the supplied doctor-cat image. CatDoc includes cross-page guided tours, saved position, keyboard movement, quick search, animated blinking, speaking mouth movements, walking, playful hearts, sleeping eyes, and optional browser speech synthesis.
+- Ctrl/Cmd+K command palette and CatDoc, a draggable rule-based directory assistant using the supplied doctor-cat image. CatDoc includes cross-page guided tours, saved position, keyboard movement, quick search, animated blinking, speaking mouth movements, walking, playful hearts, sleeping eyes, and optional browser speech synthesis. The virtual-pet playroom offers touch petting, tickles, toy catches, treats, naps, optional synthesized sounds and explicit opt-in microphone voice repeat with local-only playback. Happiness, energy and pet counts are saved in browser storage.
 - Visible keyboard focus, skip link, accessible form labels, reduced-motion support and font fallbacks.
 
 ## Folder structure
@@ -40,6 +40,7 @@ medifind-editorial/
 ├── js/
 │   ├── app.js
 │   ├── catdoc.js
+│   ├── catdoc-pet.js
 │   ├── admin.js
 │   ├── compare.js
 │   ├── directory.js

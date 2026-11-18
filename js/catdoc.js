@@ -1,5 +1,6 @@
 import { basePath, getFacilities } from './storage.js';
 import { pageUrl, isOpenNow, escapeHtml, ratingData } from './ui.js';
+import { initPetRoom } from './catdoc-pet.js';
 
 const POSITION = 'medifind.catdoc.position.v1';
 const TOUR = 'medifind.catdoc.tour.v1';
@@ -82,7 +83,7 @@ export function initCatDoc() {
   if(heroPicture){heroPicture.insertAdjacentHTML('beforebegin',animatedArt(image,heroPicture.alt));heroPicture.remove();}
   const widget = document.createElement('div');
   widget.className = 'catdoc-widget';
-  widget.innerHTML = '<div class="catdoc-bubble" aria-hidden="true">Need a helping paw?</div><button class="catdoc-character" type="button" aria-label="Open CatDoc assistant. Drag to move; use arrow keys to reposition." aria-expanded="false" aria-controls="catdoc-panel">'+ animatedArt(image) +'<span>CatDoc <i aria-hidden="true">●</i></span></button>';
+  widget.innerHTML = '<div class="catdoc-bubble" aria-hidden="true">Need a helping paw?</div><button class="catdoc-character" type="button" aria-label="Pat CatDoc. Drag to move; use arrow keys to reposition.">'+ animatedArt(image) +'<span>CatDoc <i aria-hidden="true">●</i></span></button><div class="catdoc-mini-actions"><button type="button" data-mini-play>Play</button><button type="button" data-mini-ask aria-expanded="false" aria-controls="catdoc-panel">Ask</button></div>';
   const panel = document.createElement('section');
   panel.id = 'catdoc-panel'; panel.className = 'catdoc-panel'; panel.hidden = true;
   panel.setAttribute('aria-label','CatDoc directory assistant');
@@ -93,6 +94,7 @@ export function initCatDoc() {
     + '<div class="catdoc-queries"><button type="button" data-query="Find a 24-hour pharmacy">24-hour pharmacy</button><button type="button" data-query="Show verified clinics">Verified clinics</button><button type="button" data-query="How do I compare facilities?">How to compare</button></div>'
     + '<form class="catdoc-form"><input aria-label="Ask CatDoc" placeholder="Ask about facilities…" maxlength="250" required><button class="btn btn-primary" type="submit" aria-label="Send">↗</button></form><p class="catdoc-disclaimer">Demo directory only · Not medical advice</p>';
   document.body.append(widget,panel);
+  const askButton=widget.querySelector("[data-mini-ask]");
   const cat = widget.querySelector('.catdoc-character'), log = panel.querySelector('.catdoc-log'), input = panel.querySelector('input'), tour = panel.querySelector('.catdoc-tour'), bubble=widget.querySelector('.catdoc-bubble');
   let lastReply = '', step = -1, highlighted = null, position, drag = null, suppressClick = false, idleTimer, talkTimer, cheerTimer, walkTimer;
   const root=document.documentElement;
@@ -126,9 +128,9 @@ export function initCatDoc() {
     activity(); const msg=document.createElement('div'); msg.className='catdoc-message user'; msg.textContent=q; log.append(msg); input.value=''; reply(answerQuestion(q));
   }
   function setOpen(open, focus=true) {
-    panel.hidden=!open; cat.setAttribute('aria-expanded',String(open)); widget.classList.toggle('is-open',open); activity();
+    panel.hidden=!open; askButton.setAttribute('aria-expanded',String(open)); widget.classList.toggle('is-open',open); activity();
     if (open && focus) input.focus({preventScroll:true});
-    if (!open && focus) cat.focus({preventScroll:true});
+    if (!open && focus) askButton.focus({preventScroll:true});
   }
   function clamp(x,y) {
     const w=widget.offsetWidth,h=widget.offsetHeight;
@@ -160,7 +162,9 @@ export function initCatDoc() {
     if(cat.hasPointerCapture(e.pointerId)) cat.releasePointerCapture(e.pointerId);
   }
   cat.addEventListener('pointerup',endDrag);cat.addEventListener('pointercancel',endDrag);
-  cat.addEventListener('click',e=>{if(suppressClick && e.detail!==0){suppressClick=false;return;}suppressClick=false;setOpen(panel.hidden);});
+  cat.addEventListener('click',e=>{if(suppressClick && e.detail!==0){suppressClick=false;return;}suppressClick=false;pet.react('pat',e,cat);});
+  askButton.addEventListener('click',()=>setOpen(panel.hidden));
+  widget.querySelector('[data-mini-play]').addEventListener('click',()=>pet.open());
   cat.addEventListener('keydown',e=>{
     const keys={ArrowLeft:[-24,0],ArrowRight:[24,0],ArrowUp:[0,-24],ArrowDown:[0,24]};
     if(keys[e.key]){e.preventDefault();activity();place(position.x+keys[e.key][0],position.y+keys[e.key][1]);}
@@ -178,7 +182,7 @@ export function initCatDoc() {
     walkTimer=setTimeout(()=>{widget.classList.remove('walking');celebrate();},reduced()?0:1380);
   });
   panel.querySelector('[data-play]').addEventListener('click',()=>{
-    setOpen(false,false);cat.focus({preventScroll:true});celebrate();
+    setOpen(false,false);pet.open();
   });
   panel.querySelector('[data-nap]').addEventListener('click',()=>{
     setOpen(false,false);cat.focus({preventScroll:true});clearTimeout(idleTimer);talking(false);sleeping(true);
@@ -211,5 +215,6 @@ export function initCatDoc() {
   panel.querySelector('[data-tour-stop]').addEventListener('click',stopTour);
   panel.querySelector('[data-tour-next]').addEventListener('click',()=>{if(step===steps.length-1){stopTour();reply('Tour complete! Great work. I’m here whenever you need a helping paw.');celebrate();}else showStep(step+1);});
   const resume=read('sessionStorage',TOUR,null);if(Number.isInteger(resume)&&resume>=0&&resume<steps.length){if(steps[resume].page===currentPage())showStep(resume);else stopTour();}
+  const pet=initPetRoom({art:()=>animatedArt(image),wake:activity,sleep:()=>{clearTimeout(idleTimer);talking(false);sleeping(true);},talk:talking,celebrate,openAssistant:()=>setOpen(true),closeAssistant:()=>setOpen(false,false),isSleeping:()=>root.classList.contains('catdoc-napping'),bubble});
   activity();
 }
