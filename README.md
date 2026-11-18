@@ -20,7 +20,7 @@ The 30 included listings are fictional academic samples in Punjab, India. The na
 - Star ratings, breakdowns and comments, with local feedback persisted in the browser.
 - Saved favorites and comparison of up to three facilities.
 - Demo admin login, add/edit/delete records, verification toggles, feedback deletion and reset.
-- Black-and-white editorial design, responsive grids, inverted theme, desktop cursor follower, scroll reveal, counters, page transitions, skeleton loaders and toasts.
+- Editorial black-and-white design with malachite green (#31EC56) and razzmatazz (#EF036C) accents, responsive grids, inverted theme, desktop cursor follower, scroll reveal, counters, page transitions, skeleton loaders, toasts and reduced-motion-aware accent animations.
 - Ctrl/Cmd+K command palette and rule-based directory assistant.
 - Visible keyboard focus, skip link, accessible form labels, reduced-motion support and font fallbacks.
 
@@ -113,6 +113,6 @@ If updating an existing MediFind repository, replace the old files with these fi
 - Open the assistant and ask `Find a 24-hour pharmacy`.
 - Open Admin, use the demo login, add a test facility, edit its name, toggle verification, delete it and moderate the test review.
 - Test the theme switch, Ctrl/Cmd+K, mobile menu and responsive layout.
-- Replace the three team placeholders in `pages/about.html` and the footer template in `js/app.js` with your own names if your course requires them.
+- Project team: Veronic, Sunil and Sushanth. The names appear on the About page and the shared footer.
 
 Google Fonts and external contact/map links depend on internet availability. The directory itself has no external data dependencies and falls back to system fonts if the font service is unavailable.

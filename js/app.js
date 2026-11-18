@@ -24,7 +24,7 @@ function renderShell() {
   }
 
   const footer = document.querySelector('[data-site-footer]');
-  if (footer) footer.innerHTML = `<div class="container footer-inner">CSE326 Project, Team [Member 1], [Member 2], [Member 3]</div>`;
+  if (footer) footer.innerHTML = `<div class="container footer-inner">CSE326 Project, Team Veronic, Sunil, Sushanth</div>`;
 
   const notice = document.createElement('div');
   notice.className = 'demo-strip';
