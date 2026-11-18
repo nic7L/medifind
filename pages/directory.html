@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="MediFind is a CSE326 health facility resource directory for comparing clinics, labs, pharmacies and support facilities.">
-  <meta name="theme-color" content="#050914">
+  <meta name="theme-color" content="#ffffff">
 
   <title>Directory · MediFind</title>
   <link rel="stylesheet" href="../css/style.css">
@@ -13,9 +13,9 @@
 <body>
   <header class="site-header" data-site-header></header>
   <main class="main" id="main">
-    <section class="page-hero"><div class="container"><span class="kicker">Search and filter</span><h1 class="gradient-text">Facility directory</h1><p>Search across services, categories, areas and cities, then narrow the list by availability, verification and rating.</p></div></section>
+    <section class="page-hero"><div class="container"><span class="kicker">Search and filter</span><h1 class="">Facility directory</h1><p>Search across services, categories, areas and cities, then narrow the list by availability, verification and rating.</p></div></section>
     <section class="section-tight"><div class="container">
-      <div class="filters-panel glass" data-filters>
+      <div class="filters-panel" data-filters>
         <div class="search-wrap"><label for="directory-search">Search</label><input id="directory-search" type="search" autocomplete="off" placeholder="Try “blood test”, “pharmacy” or “Phagwara”"><div class="search-suggestions" data-suggestions hidden></div></div>
         <div class="filter-field"><label for="filter-category">Category</label><select id="filter-category"><option>All</option><option>Clinic</option><option>Lab</option><option>Pharmacy</option><option>Support Facility</option></select></div>
         <div class="filter-field"><label for="filter-area">Area / City</label><select id="filter-area"><option>All</option></select></div>
@@ -23,11 +23,11 @@
         <div class="filter-toggles">
           <label class="toggle-chip"><input id="filter-open" type="checkbox"> Open now</label>
           <label class="toggle-chip"><input id="filter-verified" type="checkbox"> Verified only</label>
-          <label class="range-wrap">Minimum rating <input id="filter-rating" type="range" min="0" max="5" step="0.5" value="0"><strong data-rating-value>Any</strong></label>
+          <label class="toggle-chip"><input id="filter-favorites" type="checkbox"> Favorites only</label><label class="range-wrap">Minimum rating <input id="filter-rating" type="range" min="0" max="5" step="0.5" value="0"><strong data-rating-value>Any</strong></label>
           <button class="btn btn-ghost" type="button" data-reset-filters>Reset</button>
         </div>
       </div>
-      <div class="result-bar"><strong data-result-count>Loading facilities…</strong><span class="muted">Live open status uses your device time.</span></div>
+      <div class="result-bar"><strong data-result-count aria-live="polite">Loading facilities…</strong><span class="muted">Opening status updates in India Standard Time.</span></div>
       <div class="cards-grid" data-skeletons><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div></div>
       <div class="cards-grid" data-directory-grid hidden></div>
     </div></section>

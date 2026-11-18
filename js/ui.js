@@ -13,25 +13,45 @@ export function mapsUrl(facility) {
   return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(facility.address)}`;
 }
 
+// All sample listings are in India; opening hours use the facility's time zone.
+export function indiaTime(now = new Date()) {
+  const parts = Object.fromEntries(new Intl.DateTimeFormat('en-GB', {
+    timeZone: 'Asia/Kolkata', weekday: 'short', hour: '2-digit', minute: '2-digit', hourCycle: 'h23'
+  }).formatToParts(now).map(({type, value}) => [type, value]));
+  return {day: parts.weekday, minutes: Number(parts.hour) * 60 + Number(parts.minute)};
+}
+
 export function isOpenNow(facility, now = new Date()) {
   const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-  const value = facility.hours?.[days[now.getDay()]] || 'Closed';
-  if (value === '24 Hours') return true;
-  if (value === 'Closed') return false;
-  const [open, close] = value.split('-');
-  if (!open || !close) return false;
-  const minutes = now.getHours() * 60 + now.getMinutes();
-  const toMinutes = (time) => {
-    const [hours, mins] = time.split(':').map(Number);
-    return hours * 60 + mins;
-  };
-  return minutes >= toMinutes(open) && minutes < toMinutes(close);
+  const {day, minutes} = indiaTime(now);
+  const today = facility.hours?.[day] || 'Closed';
+  const yesterday = facility.hours?.[days[(days.indexOf(day)+6)%7]] || 'Closed';
+  const parse = value => /^([01]\d|2[0-3]):[0-5]\d-([01]\d|2[0-3]):[0-5]\d$/.test(value)
+    ? value.split('-').map(time => { const [h,m] = time.split(':').map(Number); return h*60+m; }) : null;
+  const previous = parse(yesterday);
+  if (previous && previous[1] < previous[0] && minutes < previous[1]) return true;
+  if (today === '24 Hours') return true;
+  const hours = parse(today);
+  if (!hours) return false;
+  const [start,end] = hours;
+  return start < end ? minutes >= start && minutes < end : start > end && minutes >= start;
+}
+
+export function statusMarkup(facility) {
+  const open = isOpenNow(facility);
+  return `<span data-open-id="${escapeHtml(facility.id)}" class="status-badge ${open ? 'open' : 'closed'}">${open ? 'Open now' : 'Closed'}</span>`;
+}
+
+export function phoneUrl(phone) { return `tel:${String(phone).replace(/[^+\d]/g, '')}`; }
+export function safeWebsite(url) {
+  try { const parsed = new URL(url); return ['http:', 'https:'].includes(parsed.protocol) ? parsed.href : 'https://example.com/'; }
+  catch { return 'https://example.com/'; }
 }
 
 export function ratingData(facility) {
   const local = getFeedback(facility.id);
   const baseCount = Number(facility.reviewCount || 0);
-  const baseTotal = Number(facility.rating || 0) * baseCount;
+  const baseTotal = Object.entries(facility.ratingBreakdown || {}).reduce((sum, [star, count]) => sum + Number(star) * Number(count), 0);
   const localTotal = local.reduce((sum, item) => sum + Number(item.rating || 0), 0);
   const count = baseCount + local.length;
   const rating = count ? (baseTotal + localTotal) / count : 0;
@@ -41,7 +61,7 @@ export function ratingData(facility) {
 }
 
 export function stars(value) {
-  const rounded = Math.round(Number(value));
+  const rounded = Math.max(0, Math.min(5, Math.round(Number(value) || 0)));
   return `<span class="stars" aria-label="${Number(value).toFixed(1)} out of 5 stars">${'★'.repeat(rounded)}${'☆'.repeat(5 - rounded)}</span>`;
 }
 
@@ -49,14 +69,13 @@ export function facilityCard(facility, options = {}) {
   const { rating, count } = ratingData(facility);
   const favorites = getFavorites();
   const compare = getCompare();
-  const open = isOpenNow(facility);
   const compact = options.compact ? ' compact' : '';
   return `
-    <article class="facility-card glass tilt-target reveal${compact}" data-id="${facility.id}" tabindex="0">
+    <article class="facility-card reveal${compact}" data-id="${escapeHtml(facility.id)}">
       <div class="facility-media">
-        <img src="${assetUrl(facility.photo || 'assets/placeholder.svg')}" alt="Abstract placeholder for ${escapeHtml(facility.name)}" loading="lazy">
-        <span class="status-badge ${open ? 'open' : 'closed'}">${open ? 'Open now' : 'Closed'}</span>
-        <button class="icon-btn favorite-btn ${favorites.includes(facility.id) ? 'active' : ''}" data-favorite="${facility.id}" aria-label="${favorites.includes(facility.id) ? 'Remove from' : 'Add to'} favorites">♥</button>
+        <span class="facility-index" aria-hidden="true">${({Clinic:'01',Lab:'02',Pharmacy:'03','Support Facility':'04'})[facility.category] || '—'}</span>
+        <div class="media-actions">${statusMarkup(facility)}
+        <button type="button" class="icon-btn favorite-btn ${favorites.includes(facility.id) ? 'active' : ''}" data-favorite="${facility.id}" aria-pressed="${favorites.includes(facility.id)}" aria-label="${favorites.includes(facility.id) ? 'Remove from' : 'Add to'} favorites">${favorites.includes(facility.id) ? '♥' : '♡'}</button></div>
       </div>
       <div class="facility-body">
         <div class="eyebrow-row">
@@ -68,8 +87,8 @@ export function facilityCard(facility, options = {}) {
         <p class="location-line">⌖ ${escapeHtml(facility.area)}, ${escapeHtml(facility.city)}</p>
         <div class="rating-line">${stars(rating)} <strong>${rating.toFixed(1)}</strong> <span class="muted">(${count})</span></div>
         <div class="card-actions">
-          <a class="btn btn-primary ripple" href="${pageUrl(`facility.html?id=${encodeURIComponent(facility.id)}`)}">View profile</a>
-          <button class="btn btn-ghost compare-btn ${compare.includes(facility.id) ? 'active' : ''}" data-compare="${facility.id}">${compare.includes(facility.id) ? 'Added' : 'Compare'}</button>
+          <a class="btn btn-primary" href="${pageUrl(`facility.html?id=${encodeURIComponent(facility.id)}`)}">View profile</a>
+          <button class="btn btn-ghost compare-btn ${compare.includes(facility.id) ? 'active' : ''}" data-compare="${facility.id}" aria-pressed="${compare.includes(facility.id)}">${compare.includes(facility.id) ? 'Added' : 'Compare'}</button>
         </div>
       </div>
     </article>`;
@@ -82,6 +101,8 @@ export function bindFacilityCardActions(container = document) {
       const id = button.dataset.favorite;
       const values = toggleFavorite(id);
       button.classList.toggle('active', values.includes(id));
+      button.textContent = values.includes(id) ? '♥' : '♡';
+      button.setAttribute('aria-pressed', String(values.includes(id)));
       button.setAttribute('aria-label', values.includes(id) ? 'Remove from favorites' : 'Add to favorites');
       toast(values.includes(id) ? 'Saved to favorites' : 'Removed from favorites');
     });
@@ -99,6 +120,7 @@ export function bindFacilityCardActions(container = document) {
       }
       button.classList.toggle('active', values.includes(id));
       button.textContent = values.includes(id) ? 'Added' : 'Compare';
+      button.setAttribute('aria-pressed', String(values.includes(id)));
       updateCompareCount();
       toast(values.includes(id) ? 'Added to comparison' : 'Removed from comparison');
     });
@@ -130,47 +152,16 @@ export function updateCompareCount() {
   });
 }
 
+// Reuse one observer for dynamically rendered cards and respect reduced motion.
+let revealObserver;
 export function initReveal() {
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('revealed');
-        observer.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.12 });
-  document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
-}
-
-export function initTilt() {
-  document.querySelectorAll('.tilt-target').forEach((card) => {
-    if (card.dataset.tiltBound) return;
-    card.dataset.tiltBound = 'true';
-    card.addEventListener('pointermove', (event) => {
-      if (window.matchMedia('(pointer: coarse)').matches) return;
-      const rect = card.getBoundingClientRect();
-      const x = (event.clientX - rect.left) / rect.width - 0.5;
-      const y = (event.clientY - rect.top) / rect.height - 0.5;
-      card.style.transform = `perspective(900px) rotateX(${(-y * 5).toFixed(2)}deg) rotateY(${(x * 6).toFixed(2)}deg) translateY(-3px)`;
-      card.style.setProperty('--mx', `${(x + 0.5) * 100}%`);
-      card.style.setProperty('--my', `${(y + 0.5) * 100}%`);
-    });
-    card.addEventListener('pointerleave', () => { card.style.transform = ''; });
-  });
-}
-
-export function initRipples() {
-  document.addEventListener('click', (event) => {
-    const target = event.target.closest('.ripple');
-    if (!target) return;
-    const rect = target.getBoundingClientRect();
-    const wave = document.createElement('span');
-    wave.className = 'ripple-wave';
-    wave.style.left = `${event.clientX - rect.left}px`;
-    wave.style.top = `${event.clientY - rect.top}px`;
-    target.append(wave);
-    setTimeout(() => wave.remove(), 650);
-  });
+  if (!('IntersectionObserver' in window) || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  revealObserver ||= new IntersectionObserver(entries => {
+    for (const entry of entries) if (entry.isIntersecting) {
+      entry.target.classList.add('revealed'); revealObserver.unobserve(entry.target);
+    }
+  }, {threshold: .08});
+  document.querySelectorAll('.reveal:not(.revealed)').forEach(el => revealObserver.observe(el));
 }
 
 export function formatHours(value) {

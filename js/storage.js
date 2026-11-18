@@ -1,10 +1,10 @@
 const KEYS = {
-  facilities: 'medifind.facilities.v1',
-  feedback: 'medifind.feedback.v1',
-  favorites: 'medifind.favorites.v1',
-  compare: 'medifind.compare.v1',
-  theme: 'medifind.theme.v1',
-  admin: 'medifind.admin.session.v1'
+  facilities: 'medifind.facilities.editorial.v1',
+  feedback: 'medifind.feedback.editorial.v1',
+  favorites: 'medifind.favorites.editorial.v1',
+  compare: 'medifind.compare.editorial.v1',
+  theme: 'medifind.theme.editorial.v1',
+  admin: 'medifind.admin.session.editorial.v1'
 };
 
 export const basePath = document.documentElement.dataset.base || '.';
@@ -26,7 +26,7 @@ function write(key, value) {
 
 export async function ensureSeeded() {
   const existing = read(KEYS.facilities, null);
-  if (Array.isArray(existing) && existing.length) return existing;
+  if (Array.isArray(existing)) return existing;
 
   const response = await fetch(`${basePath}/data/facilities.json`, { cache: 'no-store' });
   if (!response.ok) throw new Error('Unable to load facility data.');
@@ -93,7 +93,7 @@ export function toggleCompare(id) {
 }
 export const clearCompare = () => write(KEYS.compare, []);
 
-export const getTheme = () => localStorage.getItem(KEYS.theme) || 'dark';
+export const getTheme = () => localStorage.getItem(KEYS.theme) || 'light';
 export function setTheme(theme) {
   localStorage.setItem(KEYS.theme, theme);
 }
@@ -102,6 +102,17 @@ export const isAdminLoggedIn = () => sessionStorage.getItem(KEYS.admin) === 'tru
 export const setAdminLoggedIn = (value) => sessionStorage.setItem(KEYS.admin, String(Boolean(value)));
 
 export function resetDemoData() {
-  Object.values(KEYS).forEach((key) => localStorage.removeItem(key));
+  Object.values(KEYS).filter(key => key !== KEYS.theme).forEach(key => localStorage.removeItem(key));
   sessionStorage.removeItem(KEYS.admin);
+}
+
+// A sticky readiness signal prevents pages from missing a cached-data startup event.
+let ready = false;
+export function markReady() {
+  ready = true;
+  window.dispatchEvent(new CustomEvent('medifind:ready'));
+}
+export function onReady(callback) {
+  if (ready) queueMicrotask(callback);
+  else window.addEventListener('medifind:ready', callback, {once:true});
 }

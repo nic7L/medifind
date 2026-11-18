@@ -1,44 +1,37 @@
-# MediFind
+# MediFind — Health Facility Resource Directory
 
-MediFind is a static, multi-page **Health Facility Resource Directory** created for the **CSE326** university course. It demonstrates a searchable and comparable directory for clinics, diagnostic labs, pharmacies, and support facilities using only HTML, CSS, vanilla JavaScript, JSON, and browser storage.
+MediFind is a six-page CSE326 university project demonstrating a structured, searchable healthcare resource directory. It uses plain semantic HTML, CSS, vanilla JavaScript ES modules, JSON and browser storage. There is no build step, framework, backend, analytics or paid API.
 
 ## Project overview
 
-**Problem:** People can struggle to compare nearby healthcare resources because information such as services, hours, contact details, and verification status is inconsistent across listings.
+**Problem:** Healthcare information is often inconsistent across listings, making it hard to compare services, hours, locations and contacts.
 
-**Objective:** Present structured public information in one consistent interface with search, filters, facility profiles, comparison tools, feedback, favorites, and a browser-only admin demonstration.
+**Objective:** Present standardized facility profiles with discovery, filtering, comparison, feedback and a browser-local administration demonstration.
 
-> The included facilities and verification flags are sample data for academic demonstration. The admin page is explicitly demo-only and is not secure authentication for a real deployment.
+The 30 included listings are fictional academic samples in Punjab, India. The names, addresses, contacts, ratings and verification statuses are illustrative. The phone numbers are deliberately non-dialable examples, and email and website values use the reserved example.com domain. Maps links use a Google Maps address search, not a verified provider location. Do not use these listings to seek medical care or contact real providers. The assistant only searches the demo directory and does not provide medical advice.
 
 ## Features
 
-- 30 sample facility records loaded from `data/facilities.json`
-- Categories: Clinic, Lab, Pharmacy, Support Facility
-- Search-as-you-type with suggestions
-- Filters for category, area/city, open now, verified only, and minimum rating
-- Sorting by rating, review count, and name
-- Live open/closed status calculated from device time
-- Facility profiles with services, location, hours, phone, email, website, and Maps link
-- Favorites saved to `localStorage`
-- Compare up to three facilities side by side
-- Star-rating and comment feedback saved to `localStorage`
-- Rating breakdown including browser-local feedback
-- Admin demo to add, edit, delete, verify/unverify facilities, and delete feedback
-- Light/dark theme toggle
-- Ctrl/Cmd + K command-palette search
-- Rule-based chat assistant for simple facility queries
-- Scroll reveal, card tilt, animated counters, typing headline, cursor glow, skeleton loaders, toasts, ripples, and page transitions
-- Responsive and keyboard-accessible layout
-- No frameworks, backend, analytics, tracking, or build tools
+- Six connected pages: landing, directory, facility profile, compare, admin and about.
+- 30 sample facilities across Clinic, Lab, Pharmacy and Support Facility categories; loaded via fetch and seeded into localStorage.
+- Instant text search and suggestions; category, city/area, open now, verified, minimum rating and favorites filters; four sorting options.
+- Opening status calculated in India Standard Time, including overnight opening hours, and refreshed every 15 seconds.
+- Profile services, address, location, weekly hours, phone, email, website and Google Maps search link.
+- Star ratings, breakdowns and comments, with local feedback persisted in the browser.
+- Saved favorites and comparison of up to three facilities.
+- Demo admin login, add/edit/delete records, verification toggles, feedback deletion and reset.
+- Black-and-white editorial design, responsive grids, inverted theme, desktop cursor follower, scroll reveal, counters, page transitions, skeleton loaders and toasts.
+- Ctrl/Cmd+K command palette and rule-based directory assistant.
+- Visible keyboard focus, skip link, accessible form labels, reduced-motion support and font fallbacks.
 
 ## Folder structure
 
 ```text
-medifind/
+medifind-editorial/
 ├── index.html
 ├── README.md
 ├── assets/
-│   └── placeholder.svg
+│   └── guide.svg
 ├── css/
 │   └── style.css
 ├── data/
@@ -62,64 +55,64 @@ medifind/
 
 ## Run locally
 
-Because MediFind loads JSON with `fetch()`, do not open `index.html` directly with the `file://` protocol. Use a small local web server.
+Opening the HTML by double-clicking uses file://, which generally blocks ES module imports and fetch(). Run it through HTTP instead.
 
-### Option 1: VS Code Live Server
+### Option A — VS Code Live Server
 
-1. Open the `medifind` folder in VS Code.
-2. Install the **Live Server** extension if needed.
-3. Right-click `index.html`.
-4. Choose **Open with Live Server**.
+1. Extract the ZIP and open the extracted folder in Visual Studio Code.
+2. Install the Live Server extension if needed.
+3. Right-click `index.html` and select **Open with Live Server**.
+4. Use the URL that appears in your browser.
 
-### Option 2: Python
+### Option B — Python
 
-From inside the `medifind` folder, run:
+Open a terminal in the folder containing `index.html`, and run:
 
 ```bash
 python -m http.server 8000
 ```
 
-Then open:
+On Windows, `py -m http.server 8000` is another option. Visit `http://localhost:8000/`.
 
-```text
-http://localhost:8000/
-```
+## Demo admin
 
-## Demo admin credentials
+- Username: `admin`
+- Password: `medifind326`
 
-```text
-Username: admin
-Password: medifind326
-```
+These credentials are intentionally public. The login uses sessionStorage and is not real security. Facility edits, comments, favorites and comparison selections are localStorage data on the current browser and origin only. Other visitors cannot see them. The reset control restores the original JSON data without changing your theme. To publish permanent facility changes, edit `data/facilities.json` in the repository. A returning browser may need the demo reset to see new seed data.
 
-The admin session and all data changes are client-side only. This is intentionally labeled as demo security in the interface.
+## Deploy to GitHub Pages (free public repository)
 
-## Deploy to GitHub Pages
+1. Sign in at https://github.com/ and choose **+ → New repository**.
+2. Name the repository `medifind` (or another name), choose **Public**, and click **Create repository**. Do not initialize a separate README; one is included.
+3. Extract the ZIP. Open the folder containing `index.html`, `README.md`, `assets`, `css`, `data`, `js` and `pages`.
+4. In the GitHub repository, click **uploading an existing file** or **Add file → Upload files**.
+5. Drag the contents of the project folder, including all five subfolders, into GitHub. Do not upload the ZIP itself or wrap the files in another folder. `index.html` must be directly at the repository root.
+6. Commit the upload to `main`, with a message such as `Publish MediFind editorial website`.
+7. Open the repository's **Settings → Pages** (under Code and automation).
+8. In **Build and deployment**, set Source to **Deploy from a branch**.
+9. Select the `main` branch and `/ (root)` folder. Click **Save**.
+10. Check the repository's **Actions** tab for a successful Pages deployment. Return to **Settings → Pages** and select the published URL.
 
-1. Sign in to GitHub and create a new repository, for example `medifind`.
-2. Keep the repository public if you want to use GitHub Pages on a standard free setup.
-3. Upload the **contents** of this project folder so that `index.html` is at the repository root.
-4. Commit the files to the `main` branch.
-5. Open the repository's **Settings**.
-6. In the left sidebar, open **Pages**.
-7. Under **Build and deployment**, choose **Deploy from a branch**.
-8. Select branch **main**.
-9. Select folder **/ (root)**.
-10. Click **Save**.
-11. After GitHub publishes the site, your URL will follow this format:
+The URL format is:
 
 ```text
 https://<username>.github.io/<repo-name>/
 ```
 
-Example:
+Example: `https://yourusername.github.io/medifind/`.
 
-```text
-https://yourusername.github.io/medifind/
-```
+If updating an existing MediFind repository, replace the old files with these files, preserving folder names; delete the old `assets/placeholder.svg` if present. No absolute repository paths are used.
 
-All project links use relative paths, so the site works correctly when hosted inside a GitHub Pages repository subfolder.
+## Submission checklist
 
-## Resetting browser data
+- Open the published homepage, then select each navbar destination.
+- Open the directory, search for NightOwl, and test category, city, rating, favorites and open-now filters.
+- Open a profile, leave a test review, reload, and verify the review persists.
+- Add three facilities to Compare; check the comparison limit.
+- Open the assistant and ask `Find a 24-hour pharmacy`.
+- Open Admin, use the demo login, add a test facility, edit its name, toggle verification, delete it and moderate the test review.
+- Test the theme switch, Ctrl/Cmd+K, mobile menu and responsive layout.
+- Replace the three team placeholders in `pages/about.html` and the footer template in `js/app.js` with your own names if your course requires them.
 
-The site seeds `localStorage` from `data/facilities.json` only on first load. If you edit facilities or submit feedback, those changes persist in that browser. Use the **Reset all demo data** control on the Admin page to restore the original JSON sample data.
+Google Fonts and external contact/map links depend on internet availability. The directory itself has no external data dependencies and falls back to system fonts if the font service is unavailable.

@@ -1,4 +1,4 @@
-import { getFacilities, upsertFacility, deleteFacility, getAllFeedback, deleteFeedback, isAdminLoggedIn, setAdminLoggedIn, resetDemoData, ensureSeeded } from './storage.js';
+import { onReady, getFacilities, upsertFacility, deleteFacility, getAllFeedback, deleteFeedback, isAdminLoggedIn, setAdminLoggedIn, resetDemoData, ensureSeeded } from './storage.js';
 import { escapeHtml, toast, ratingData } from './ui.js';
 
 let editingId = null;
@@ -60,10 +60,7 @@ function openEditor(id = null) {
     ['name','category','area','city','address','phone','email','website','description'].forEach((key) => { form.elements[key].value = f[key] || ''; });
     form.elements.services.value = (f.services || []).join(', ');
     form.elements.verified.checked = Boolean(f.verified);
-    form.elements.rating.value = Number(f.rating || 4.2);
-    form.elements.weekday.value = f.hours?.Mon || '09:00-18:00';
-    form.elements.saturday.value = f.hours?.Sat || '09:00-14:00';
-    form.elements.sunday.value = f.hours?.Sun || 'Closed';
+    for (const day of ['Mon','Tue','Wed','Thu','Fri','Sat','Sun']) form.elements[day].value = f.hours[day] || 'Closed';
   }
   dialog.showModal();
 }
@@ -74,18 +71,23 @@ function saveEditor(event) {
   const data = new FormData(form);
   const old = editingId ? getFacilities().find((f) => f.id === editingId) : null;
   const id = editingId || `mf-${Date.now()}`;
-  const rating = Number(data.get('rating') || 4.2);
+  const days = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  const hours = Object.fromEntries(days.map(day => [day, data.get(day).trim()]));
+  const validHours = /^(Closed|24 Hours|(?:[01]\d|2[0-3]):[0-5]\d-(?:[01]\d|2[0-3]):[0-5]\d)$/;
+  if (Object.values(hours).some(value => !validHours.test(value) || (value.includes('-') && value.split('-')[0] === value.split('-')[1]))) { toast('Use Closed, 24 Hours or HH:MM-HH:MM with distinct times.'); return; }
+  if (!['name','description','area','city','address','phone'].every(key => data.get(key).trim()) || !data.get('services').split(',').some(v => v.trim())) { toast('Fill all facility fields.'); return; }
+  if (!/^https?:\/\//i.test(data.get('website').trim())) { toast('Website must use http or https.'); return; }
+  const rating = old?.rating || 0;
   const reviewCount = old?.reviewCount || 0;
   const facility = {
     id,
     name: data.get('name').trim(),
     description: data.get('description').trim(),
     category: data.get('category'),
-    photo: old?.photo || 'assets/placeholder.svg',
     services: data.get('services').split(',').map((v) => v.trim()).filter(Boolean),
     address: data.get('address').trim(), area: data.get('area').trim(), city: data.get('city').trim(),
-    phone: data.get('phone').trim(), email: data.get('email').trim(), website: data.get('website').trim() || 'https://example.com',
-    hours: { Mon:data.get('weekday'), Tue:data.get('weekday'), Wed:data.get('weekday'), Thu:data.get('weekday'), Fri:data.get('weekday'), Sat:data.get('saturday'), Sun:data.get('sunday') },
+    phone: data.get('phone').trim(), email: data.get('email').trim(), website: data.get('website').trim(),
+    hours,
     rating, reviewCount, ratingBreakdown: old?.ratingBreakdown || { 5:0, 4:0, 3:0, 2:0, 1:0 },
     verified: data.get('verified') === 'on', emergency: false
   };
@@ -96,7 +98,7 @@ function saveEditor(event) {
   renderDashboard();
 }
 
-window.addEventListener('medifind:ready', () => {
+onReady(() => {
   showView();
   document.querySelector('[data-admin-login] form').addEventListener('submit', (event) => {
     event.preventDefault();

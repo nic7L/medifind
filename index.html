@@ -1,65 +1,60 @@
 <!DOCTYPE html>
 <html lang="en" data-base=".">
 <head>
-
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="MediFind is a CSE326 health facility resource directory for comparing clinics, labs, pharmacies and support facilities.">
-  <meta name="theme-color" content="#050914">
-
-  <title>MediFind · Health Facility Resource Directory</title>
+  <meta name="description" content="Explore and compare healthcare resources with MediFind, a CSE326 demonstration directory.">
+  <meta name="theme-color" content="#ffffff">
+  <title>MediFind — A clearer way to find care</title>
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
   <header class="site-header" data-site-header></header>
-  <main class="main" id="main">
+  <main id="main" class="main">
     <section class="hero">
-      <div class="hero-cursor-glow" aria-hidden="true"></div>
       <div class="container hero-grid">
         <div class="hero-copy reveal">
-          <span class="kicker">CSE326 · Health Facility Resource Directory</span>
-          <h1>Find <span class="gradient-text typing-line" data-typing>care you can compare</span></h1>
-          <p>Explore structured public information for clinics, diagnostic labs, pharmacies and health support facilities without jumping between inconsistent listings.</p>
-          <form class="hero-search glass" data-hero-search role="search">
-            <input type="search" aria-label="Search MediFind" placeholder="Search facility, service, area or city">
-            <button class="btn btn-primary ripple" type="submit">Search directory</button>
+          <span class="kicker">The healthcare directory / CSE326</span>
+          <h1>Good care starts<br>with <em>clarity.</em></h1>
+          <p>Find, understand and compare healthcare facilities. One directory for clinics, diagnostic labs, pharmacies and essential support services.</p>
+          <form class="hero-search" data-hero-search role="search">
+            <input type="search" aria-label="Search MediFind" placeholder="Facility, service or city">
+            <button class="btn btn-primary" type="submit">Search directory ↗</button>
           </form>
-          <div class="hero-actions"><a class="btn btn-ghost ripple" href="pages/directory.html">Explore all facilities</a><a class="btn btn-ghost ripple" href="pages/compare.html">Compare options</a></div>
+          <div class="hero-actions"><a href="pages/directory.html">Explore the directory ↗</a><a href="pages/compare.html">Compare facilities ↗</a></div>
         </div>
-        <div class="hero-visual reveal" aria-hidden="true">
-          <div class="orbit-card glass"></div>
-          <div class="mini-dashboard glass">
-            <div class="mini-search">⌕ Search health resources</div>
-            <div class="mini-row"><span class="mini-icon">+</span><span><strong>Clinic</strong><small>Verified · Open now</small></span><span>4.8★</span></div>
-            <div class="mini-row"><span class="mini-icon">◉</span><span><strong>Diagnostic Lab</strong><small>Reports · Home collection</small></span><span>4.6★</span></div>
-            <div class="mini-row"><span class="mini-icon">Rx</span><span><strong>24-hour Pharmacy</strong><small>Open all day</small></span><span>4.7★</span></div>
-          </div>
-        </div>
+        <aside class="hero-visual reveal" aria-label="MediFind directory categories">
+          <div class="visual-top"><span>MEDIFIND / FIELD GUIDE</span><span>01—04</span></div>
+          <img src="assets/guide.svg" alt="Abstract black and white line illustration of a medical cross within a location marker and concentric circles">
+          <div class="visual-bottom"><span>Information before decisions.</span><span>✳</span></div>
+        </aside>
       </div>
     </section>
-
-    <section class="section-tight">
+    <section class="inverse-section section-tight" aria-label="Directory statistics">
       <div class="container stats-grid reveal">
-        <div class="stat-card glass"><strong data-counter="facilities">0</strong><span>sample facilities</span></div>
-        <div class="stat-card glass"><strong data-counter="verified">0</strong><span>verified listings</span></div>
-        <div class="stat-card glass"><strong data-counter="cities">0</strong><span>cities represented</span></div>
-        <div class="stat-card glass"><strong data-counter="categories">0</strong><span>service categories</span></div>
+        <div class="stat-card"><strong data-counter="facilities">30</strong><span>Sample facilities</span></div>
+        <div class="stat-card"><strong data-counter="verified">—</strong><span>Demo verified</span></div>
+        <div class="stat-card"><strong data-counter="cities">—</strong><span>Cities represented</span></div>
+        <div class="stat-card"><strong data-counter="categories">4</strong><span>Service categories</span></div>
       </div>
     </section>
-
-    <section class="section">
-      <div class="container">
-        <div class="section-heading reveal"><div><span class="kicker">Featured resources</span><h2>High-rated facilities</h2></div><a class="btn btn-ghost" href="pages/directory.html">View full directory →</a></div>
-        <div class="cards-grid" data-featured><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div></div>
+    <section class="section"><div class="container">
+      <div class="section-heading reveal"><div><span class="kicker">01 / Explore by service</span><h2>What are you looking for?</h2></div><a href="pages/directory.html">View every facility ↗</a></div>
+      <div class="category-grid">
+        <a class="category-tile reveal" href="pages/directory.html?category=Clinic"><span>01 / PRIMARY CARE</span><h3>Clinics</h3><p>Consultations, checkups and ongoing care.</p><b aria-hidden="true">↗</b></a>
+        <a class="category-tile reveal" href="pages/directory.html?category=Lab"><span>02 / DIAGNOSTICS</span><h3>Labs</h3><p>Testing, screening and diagnostic services.</p><b aria-hidden="true">↗</b></a>
+        <a class="category-tile reveal" href="pages/directory.html?category=Pharmacy"><span>03 / MEDICINES</span><h3>Pharmacies</h3><p>Medicine access and pharmacy services.</p><b aria-hidden="true">↗</b></a>
+        <a class="category-tile reveal" href="pages/directory.html?category=Support%20Facility"><span>04 / WELLBEING</span><h3>Support</h3><p>Rehabilitation, counselling and home care.</p><b aria-hidden="true">↗</b></a>
       </div>
-    </section>
-
-    <section class="section">
-      <div class="container about-grid">
-        <article class="panel glass reveal"><span class="kicker">Why MediFind</span><h2>Structured information, one consistent format.</h2><p class="muted">Every profile uses the same fields for services, location, opening hours, contact details, verification and community feedback. That makes options easier to scan and compare.</p></article>
-        <article class="panel glass reveal"><span class="kicker">Privacy-friendly demo</span><h2>No backend, no accounts, no tracking.</h2><p class="muted">Favorites, comparisons, feedback and admin edits stay in your browser with localStorage. The project is designed to work as static files on GitHub Pages.</p></article>
-      </div>
-    </section>
+    </div></section>
+    <section class="section feature-section"><div class="container">
+      <div class="section-heading reveal"><div><span class="kicker">02 / Selected listings</span><h2>High-rated facilities.</h2></div><a class="btn btn-ghost" href="pages/directory.html">Full directory ↗</a></div>
+      <div class="cards-grid" data-featured><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div></div>
+    </div></section>
+    <section class="section inverse-section"><div class="container about-grid reveal">
+      <div><span class="kicker">03 / Our approach</span><h2>Less searching.<br>More understanding.</h2></div>
+      <div><p>Each listing follows a consistent format: services, location, hours, contacts and feedback. Save your shortlist or compare three facilities side by side.</p><p>This academic directory uses fictional sample listings. Ratings and verification are illustrative, not endorsements or real medical guidance.</p><a href="pages/about.html">Read about the project ↗</a></div>
+    </div></section>
   </main>
   <footer class="site-footer" data-site-footer></footer>
   <script type="module" src="js/app.js"></script>

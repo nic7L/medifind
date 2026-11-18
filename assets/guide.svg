@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 460" role="img" aria-labelledby="title desc">
+  <title id="title">Healthcare field guide</title><desc id="desc">A line drawing of a medical cross at the center of an abstract map marker.</desc>
+  <rect width="560" height="460" fill="#ffffff"/>
+  <g stroke="#b8b8b8" stroke-width="1" fill="none"><path d="M0 115H560M0 230H560M0 345H560M140 0V460M280 0V460M420 0V460"/><circle cx="280" cy="230" r="215"/><circle cx="280" cy="230" r="170"/><circle cx="280" cy="230" r="125"/></g>
+  <g stroke="#000000" fill="none" stroke-width="2"><path d="M280 50v360M100 230h360" stroke-dasharray="4 9"/><circle cx="280" cy="230" r="196"/><path d="M280 81c-75 0-136 60-136 134 0 93 136 178 136 178s136-85 136-178c0-74-61-134-136-134Z" fill="#ffffff" stroke-width="4"/><circle cx="280" cy="215" r="84"/><path d="M259 164h42v30h30v42h-30v30h-42v-30h-30v-42h30Z" fill="#000000"/></g>
+  <g fill="#000000" font-family="monospace" font-size="11"><text x="16" y="23">31° N / 75° E</text><text x="16" y="444">FIG. 01 — FINDING CARE</text><text x="500" y="23">MF.01</text></g>
+</svg>
