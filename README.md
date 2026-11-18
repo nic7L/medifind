@@ -20,8 +20,8 @@ The 30 included listings are fictional academic samples in Punjab, India. The na
 - Star ratings, breakdowns and comments, with local feedback persisted in the browser.
 - Saved favorites and comparison of up to three facilities.
 - Demo admin login, add/edit/delete records, verification toggles, feedback deletion and reset.
-- Editorial black-and-white design with malachite green (#31EC56) and razzmatazz (#EF036C) accents, responsive grids, inverted theme, desktop cursor follower, scroll reveal, counters, page transitions, skeleton loaders, toasts and reduced-motion-aware accent animations.
-- Ctrl/Cmd+K command palette and rule-based directory assistant.
+- Midnight Emerald (#0B1210) default theme with malachite green (#31EC56) and razzmatazz (#EF036C) accents, responsive grids, optional soft light theme, desktop cursor follower, scroll reveal, counters, page transitions, skeleton loaders, toasts and reduced-motion-aware accent animations.
+- Ctrl/Cmd+K command palette and CatDoc, a draggable rule-based directory assistant using the supplied doctor-cat image. CatDoc includes cross-page guided tours, saved position, keyboard movement, quick search, walk and idle animations, and optional browser speech synthesis.
 - Visible keyboard focus, skip link, accessible form labels, reduced-motion support and font fallbacks.
 
 ## Folder structure
@@ -31,13 +31,15 @@ medifind-editorial/
 ├── index.html
 ├── README.md
 ├── assets/
-│   └── guide.svg
+│   ├── guide.svg
+│   └── catdoc.webp
 ├── css/
 │   └── style.css
 ├── data/
 │   └── facilities.json
 ├── js/
 │   ├── app.js
+│   ├── catdoc.js
 │   ├── admin.js
 │   ├── compare.js
 │   ├── directory.js

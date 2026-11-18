@@ -3,7 +3,7 @@ const KEYS = {
   feedback: 'medifind.feedback.editorial.v1',
   favorites: 'medifind.favorites.editorial.v1',
   compare: 'medifind.compare.editorial.v1',
-  theme: 'medifind.theme.editorial.v1',
+  theme: 'medifind.theme.emerald.v2',
   admin: 'medifind.admin.session.editorial.v1'
 };
 
@@ -93,7 +93,7 @@ export function toggleCompare(id) {
 }
 export const clearCompare = () => write(KEYS.compare, []);
 
-export const getTheme = () => localStorage.getItem(KEYS.theme) || 'light';
+export const getTheme = () => localStorage.getItem(KEYS.theme) || 'dark';
 export function setTheme(theme) {
   localStorage.setItem(KEYS.theme, theme);
 }
